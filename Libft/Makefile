@@ -111,14 +111,15 @@ bonus: all $(OBJ) $(BONUS_OBJ)
 	@$(AR) $(NAME) $(BONUS_OBJ)
 	@echo "$(GREEN)$(NAME) compiled with bonus!$(DEF_COLOR)"
 
-clean: 
+clean:
+	@echo "$(YELLOW)Cleaning object files for $(NAME)...$(DEF_COLOR)"
 	@$(RM) $(OBJ) $(BONUS_OBJ) $(OBJF)
 	@$(RM) -r $(OBJ_DIR)
-	@echo "$(RED)Objects removed!$(DEF_COLOR)"
+	@echo "$(GREEN)Objects for $(NAME) deleted succesfully!$(DEF_COLOR)"
 
 fclean: clean 
 	@$(RM) $(NAME)
-	@echo "$(RED)$(NAME) removed!$(DEF_COLOR)"
+	@echo "$(GREEN)$(NAME) deleted succesfully!$(DEF_COLOR)"
 
 re: fclean all
 	

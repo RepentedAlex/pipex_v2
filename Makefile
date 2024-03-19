@@ -20,6 +20,7 @@ NAME	=	pipex
 CC		=	gcc
 CLFAGS	=	-Wall -Wextra -Werror
 SRC_DIR	=	src/
+INCLUDE	=	include/
 OBJ_DIR	=	obj/
 LIBFT	=	Libft/
 RM		=	rm -f
@@ -31,8 +32,8 @@ RM		=	rm -f
 SRC_FILES	=	main \
 				utils
 
-SRC			=	$(addprefix $(SRC_DIR), $(SRC_FILES), $(addsuffix .c, $(SRC_FILES)))
-OBJ			=	$(addprefix $(OBJ_DIR), $(SRC_FILES), $(addsuffix .o, $(SRC_FILES)))
+SRC			=	$(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
+OBJ			=	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))
 
 OBJF		= .cache_exists
 
@@ -42,11 +43,13 @@ OBJF		= .cache_exists
 
 all:	$(NAME)
 
-$(NAME):
+$(NAME): $(OBJF) $(OBJ)
 	@make -C $(LIBFT)
-	@
+	$(CC) $(CLFAGS) -I./$(INCLUDE) -I./$(LIBFT)$(INCLUDE) -L./$(LIBFT) $(OBJ) -lft -o $(NAME)
 
-
+$(OBJ_DIR)%.o:	$(SRC_DIR)%.c | $(OBJF)
+	@echo "$(YELLOW)Compiling $<...$(DEF_COLOR)"
+	@$(CC) $(CLFAGS) -I./$(INCLUDE) -I./$(LIBFT)/$(INCLUDE) -c $< -o $@
 
 $(OBJF):
 	@echo "$(BLUE)Creating $@ folder...$(DEF_COLOR)"
@@ -55,9 +58,18 @@ $(OBJF):
 	@echo "$(BLUE)$@ folder created succesfully!$(DEF_COLOR)"
 
 clean:
+	@echo "$(YELLOW)Cleaning object files for $(NAME)...$(DEF_COLOR)"
 	@make -C $(LIBFT) clean
 	@$(RM) -r ./obj/
 	@$(RM) .cache_exists
+	@echo "$(GREEN)Object for $(NAME) deleted succesfully!$(DEF_COLOR)"
 
 fclean:	clean
-	@
+	@echo "$(YELLOW)Cleaning files for $(NAME)$(DEF_COLOR)"
+	@make -C $(LIBFT) fclean
+	@$(RM) $(NAME)
+	@echo "$(GREEN)$(NAME) deleted succesfully!$(DEF_COLOR)"
+
+re:	fclean all
+
+.PHONY:	all, clean, fclean, re
