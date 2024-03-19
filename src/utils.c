@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 16:09:02 by apetitco          #+#    #+#             */
-/*   Updated: 2024/03/19 20:36:51 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/03/19 20:41:09 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,9 @@ void	exit_handler(int n_exit)
 	exit(0);
 }
 
-/**
- * Opens a file and returns the file descriptor.
- * 
- * @param file The name of the file to open.
- * @param io The I/O direction (STDIN_FILENO for input, STDOUT_FILENO for output).
- * @return The file descriptor if successful, otherwise -1.
- */
 int	open_file(char *file, int io)
 {
-	int ret;
+	int	ret;
 
 	if (io == STDIN_FILENO)
 		ret = open(file, O_RDONLY, 0777);
@@ -47,7 +40,7 @@ int	open_file(char *file, int io)
 		ret = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (ret == -1)
 		exit(0);
-	return ret;
+	return (ret);
 }
 
 /**
@@ -57,7 +50,7 @@ int	open_file(char *file, int io)
  */
 void	ft_free_tab(char **tab)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (tab[i])
@@ -70,16 +63,16 @@ void	ft_free_tab(char **tab)
 
 /**
  * Retrieves the value of an environment variable.
- * 
+ *
  * @param name The name of the environment variable.
  * @param envp An array of strings representing the environment variables.
  * @return The value of the environment variable if found, NULL otherwise.
  */
-static char *get_env(char *name, char *envp[])
+static char	*get_env(char *name, char *envp[])
 {
-	int i;
-	int j;
-	char *env_string;
+	int		i;
+	int		j;
+	char	*env_string;
 
 	i = 0;
 	while (envp[i])
@@ -107,13 +100,13 @@ static char *get_env(char *name, char *envp[])
  * @param envp The array of environment variables.
  * @return The full path of the command if found, otherwise the original command.
  */
-char *get_path(char *cmd, char *envp[])
+char	*get_path(char *cmd, char *envp[])
 {
-	int i;
-	char *exec;
-	char **all_paths;
-	char *part_path;
-	char **cmds_array;
+	int		i;
+	char	*exec;
+	char	**all_paths;
+	char	*part_path;
+	char	**cmds_array;
 
 	i = -1;
 	all_paths = ft_split(get_env("PATH", envp), ':');

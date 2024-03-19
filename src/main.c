@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 16:17:16 by apetitco          #+#    #+#             */
-/*   Updated: 2024/03/19 20:36:58 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/03/19 20:39:52 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,15 @@
 
 /**
  * Executes a command with the given arguments.
- * 
+ *
  * @param cmd The command to execute.
  * @param envp The environment variables.
  */
 void	execute(char *cmd, char *envp[])
 {
-	char **cmds_array;
-	char *path;
-	
+	char	**cmds_array;
+	char	*path;
+
 	cmds_array = ft_split(cmd, ' ');
 	path = get_path(cmds_array[0], envp);
 	if (execve(path, cmds_array, envp) == -1)
@@ -33,7 +33,6 @@ void	execute(char *cmd, char *envp[])
 		ft_free_tab(cmds_array);
 		exit(0);
 	}
-	
 }
 
 /**
@@ -45,7 +44,7 @@ void	execute(char *cmd, char *envp[])
  */
 void	child(char *argv[], int *p_fd, char *envp[])
 {
-	int fd;
+	int	fd;
 
 	fd = open_file(argv[1], 0);
 	dup2(fd, STDIN_FILENO);
@@ -63,7 +62,7 @@ void	child(char *argv[], int *p_fd, char *envp[])
  */
 void	parent(char *argv[], int *p_fd, char *envp[])
 {
-	int fd;
+	int	fd;
 
 	fd = open_file(argv[4], 1);
 	dup2(fd, STDOUT_FILENO);
@@ -72,22 +71,10 @@ void	parent(char *argv[], int *p_fd, char *envp[])
 	execute(argv[3], envp);
 }
 
-/**
- * @brief The main function of the program.
- *
- * This function is the entry point of the program. It takes command line arguments
- * and environment variables as parameters. It checks the number of command line arguments,
- * creates a pipe, forks a child process, and calls the child and parent functions accordingly.
- *
- * @param argc The number of command line arguments.
- * @param argv An array of strings containing the command line arguments.
- * @param envp An array of strings containing the environment variables.
- * @return 0 on success.
- */
-int main(int argc, char *argv[], char *envp[])
+int	main(int argc, char *argv[], char *envp[])
 {
-	int p_fd[2];
-	pid_t pid;
+	int		p_fd[2];
+	pid_t	pid;
 
 	if (argc != 5)
 		exit_handler(1);
@@ -97,5 +84,5 @@ int main(int argc, char *argv[], char *envp[])
 	if (pid == 0)
 		child(argv, p_fd, envp);
 	parent(argv, p_fd, envp);
-	return 0;
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/06 13:55:47 by apetitco          #+#    #+#             */
-/*   Updated: 2024/02/29 22:43:15 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/03/19 20:42:08 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 void	ft_putstr_fd(char *s, int fd)
 {
 	int	i;
- 
- 	if (!s)
+
+	if (!s)
 		return ;
 	i = 0;
 	while (s[i])
