@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 16:17:16 by apetitco          #+#    #+#             */
-/*   Updated: 2024/03/19 20:39:52 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/04/18 19:07:15 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	execute(char *cmd, char *envp[])
 		ft_putstr_fd("pipex: command not found: ", STDERR_FILENO);
 		ft_putendl_fd(cmds_array[0], STDERR_FILENO);
 		ft_free_tab(cmds_array);
-		exit(0);
+		exit(127);
 	}
 }
 
@@ -79,7 +79,7 @@ int	main(int argc, char *argv[], char *envp[])
 	if (argc != 5)
 		exit_handler(1);
 	if (pipe(p_fd) == -1)
-		exit(-1);
+		exit(127);
 	pid = fork();
 	if (pid == 0)
 		child(argv, p_fd, envp);

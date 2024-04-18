@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 16:09:02 by apetitco          #+#    #+#             */
-/*   Updated: 2024/03/19 20:41:09 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/04/18 19:28:19 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	exit_handler(int n_exit)
 {
 	if (n_exit == 1)
 		ft_putstr_fd("./pipex infile cmd1 cmd2 outfile\n", STDERR_FILENO);
-	exit(0);
+	exit(127);
 }
 
 int	open_file(char *file, int io)
@@ -39,7 +39,7 @@ int	open_file(char *file, int io)
 	else if (io == STDOUT_FILENO)
 		ret = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (ret == -1)
-		exit(0);
+		exit(127);
 	return (ret);
 }
 
@@ -108,20 +108,20 @@ char	*get_path(char *cmd, char *envp[])
 	char	*part_path;
 	char	**cmds_array;
 
-	i = -1;
+	if (ft_strchr(cmd, '/'))
+		return (cmd);
+	i = 0;
 	all_paths = ft_split(get_env("PATH", envp), ':');
 	cmds_array = ft_split(cmd, ' ');
-	while (all_paths[++i])
+	while (all_paths[i])
 	{
 		part_path = ft_strjoin(all_paths[i], "/");
 		exec = ft_strjoin(part_path, cmds_array[0]);
 		free(part_path);
 		if (access(exec, F_OK | X_OK) == 0)
-		{
-			ft_free_tab(cmds_array);
-			return (exec);
-		}
+			return (ft_free_tab(cmds_array), ft_free_tab(all_paths), exec);
 		free(exec);
+		i++;
 	}
 	ft_free_tab(all_paths);
 	ft_free_tab(cmds_array);
