@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alessandropetitcollin <alessandropetitc    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 16:17:16 by apetitco          #+#    #+#             */
-/*   Updated: 2024/04/18 19:07:15 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/04/29 15:26:53 by alessandrop      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Libft/include/libft.h"
+#include "libft.h"
 #include "pipex.h"
 
 /**

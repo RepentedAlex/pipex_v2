@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alessandropetitcollin <alessandropetitc    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 16:09:02 by apetitco          #+#    #+#             */
-/*   Updated: 2024/04/18 19:28:19 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/04/29 15:30:55 by alessandrop      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../Libft/include/libft.h"
+#include "libft.h"
 #include "pipex.h"
 
 /**
@@ -34,6 +34,7 @@ int	open_file(char *file, int io)
 {
 	int	ret;
 
+	ret = 0;
 	if (io == STDIN_FILENO)
 		ret = open(file, O_RDONLY, 0777);
 	else if (io == STDOUT_FILENO)
