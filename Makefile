@@ -16,14 +16,15 @@ WHITE		=	\033[0;97m
 ## VARIABLES ##
 ###############
 
-NAME	=	pipex
-CC		=	gcc
-CLFAGS	=	-Wall -Wextra -Werror
-SRC_DIR	=	src/
-INCLUDE	=	include/
-OBJ_DIR	=	obj/
-LIBFT	=	Libft/
-RM		=	rm -f
+NAME		=	pipex
+CC			=	cc
+CLFAGS		=	-Wall -Wextra -Werror
+INCLUDES	=   -I./$(INCLUDE) -I./$(LIBFT)$(INCLUDE) 
+SRC_DIR		=	src/
+INCLUDE		=	include/
+OBJ_DIR		=	obj/
+LIBFT		=	Libft/
+RM			=	rm -f
 
 #############
 ## SOURCES ##
@@ -32,10 +33,11 @@ RM		=	rm -f
 SRC_FILES	=	main \
 				utils
 
-SRC			=	$(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
-OBJ			=	$(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))
+SRC			=	$(addprefix $(SRC_DIR)/, $(addsuffix .c, $(SRC_FILES)))
+OBJ			=	$(addprefix $(OBJ_DIR)/app/, $(addsuffix .o, $(SRC_FILES)))
+DEP			=	$(addprefix $(OBJ_DIR)/app/, $(addsuffix .d, $(SRC_FILES)))
 
-OBJF		= .cache_exists
+-include $(DEP)
 
 #############
 ## RECIPES ##
@@ -43,30 +45,25 @@ OBJF		= .cache_exists
 
 all:	$(NAME)
 
-$(NAME): $(OBJF) $(OBJ)
-	@make -C $(LIBFT)
-	$(CC) $(CLFAGS) -I./$(INCLUDE) -I./$(LIBFT)$(INCLUDE) -L./$(LIBFT) $(OBJ) -lft -o $(NAME)
+$(NAME): $(OBJ)
+	@make --no-print-directory -C $(LIBFT) "OBJ_DIR=$(shell realpath $(OBJ_DIR))"
+	@echo "$(YELLOW)Linking $(NAME)...$(DEF_COLOR)"
+	@$(CC) $(CLFAGS) $(INCLUDES) -L./$(OBJ_DIR) $(OBJ) -lft -o $(NAME)
 
-$(OBJ_DIR)%.o:	$(SRC_DIR)%.c | $(OBJF)
+$(OBJ_DIR)/app/%.o:	$(SRC_DIR)%.c
+	@mkdir -p $(shell dirname $@)
 	@echo "$(YELLOW)Compiling $<...$(DEF_COLOR)"
-	@$(CC) $(CLFAGS) -I./$(INCLUDE) -I./$(LIBFT)/$(INCLUDE) -c $< -o $@
-
-$(OBJF):
-	@echo "$(BLUE)Creating $@ folder...$(DEF_COLOR)"
-	@mkdir -p $(addprefix $(OBJ_DIR), $(dir $(SRC_FILES)))
-	@touch $@
-	@echo "$(BLUE)$@ folder created succesfully!$(DEF_COLOR)"
+	@$(CC) $(CLFAGS) $(INCLUDES) -c $< -o $@ -MMD
 
 clean:
 	@echo "$(YELLOW)Cleaning object files for $(NAME)...$(DEF_COLOR)"
-	@make -C $(LIBFT) clean
-	@$(RM) -r ./obj/
-	@$(RM) .cache_exists
+	@make --no-print-directory -C $(LIBFT) clean "OBJ_DIR=$(shell realpath $(OBJ_DIR))"
+	@$(RM) -r $(OBJ_DIR)
 	@echo "$(GREEN)Object for $(NAME) deleted succesfully!$(DEF_COLOR)"
 
 fclean:	clean
 	@echo "$(YELLOW)Cleaning files for $(NAME)$(DEF_COLOR)"
-	@make -C $(LIBFT) fclean
+	@make --no-print-directory -C $(LIBFT) fclean "OBJ_DIR=$(shell realpath $(OBJ_DIR))"
 	@$(RM) $(NAME)
 	@echo "$(GREEN)$(NAME) deleted succesfully!$(DEF_COLOR)"
 

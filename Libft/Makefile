@@ -17,13 +17,16 @@ WHITE = \033[0;97m
 ###############
 
 NAME	= libft.a
-CC		= gcc
+CC		?= cc
 CFLAGS	= -Wall -Wextra -Werror
 INCLUDE	= include
 SRC_DIR	= src/
-OBJ_DIR	= obj/
+OBJ_DIR	?= obj/
 RM		= rm -f
 AR		= ar rcs
+
+
+TARGET  = $(OBJ_DIR)/$(NAME)
 
 #############
 ## SOURCES ##
@@ -58,22 +61,7 @@ SRC_FILES =		ft_is/ft_isalnum \
 				ft_str/ft_substr \
 				ft_to/ft_tolower \
 				ft_to/ft_toupper \
-				ft_atoi \
-				ft_bzero \
-				ft_calloc \
-				ft_itoa \
-				ft_split
-
-SRC		= $(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
-OBJ		= $(addprefix $(OBJ_DIR), $(addsuffix .o, $(SRC_FILES)))
-
-OBJF	= .cache_exists
-
-###########
-## BONUS ##
-###########
-
-BONUS_FILES =	ft_lst/ft_lstadd_back_bonus \
+				ft_lst/ft_lstadd_back_bonus \
 				ft_lst/ft_lstadd_front_bonus \
 				ft_lst/ft_lstclear_bonus \
 				ft_lst/ft_lstdelone_bonus \
@@ -81,10 +69,16 @@ BONUS_FILES =	ft_lst/ft_lstadd_back_bonus \
 				ft_lst/ft_lstlast_bonus \
 				ft_lst/ft_lstmap_bonus \
 				ft_lst/ft_lstnew_bonus \
-				ft_lst/ft_lstsize_bonus
+				ft_lst/ft_lstsize_bonus \
+				ft_atoi \
+				ft_bzero \
+				ft_calloc \
+				ft_itoa \
+				ft_split 
 
-BONUS_SRC	= $(addprefix $(SRC_DIR), $(addsuffix .c, $(BONUS_FILES)))
-BONUS_OBJ	= $(addprefix $(OBJ_DIR), $(addsuffix .o, $(BONUS_FILES)))
+SRC		= $(addprefix $(SRC_DIR)/, $(addsuffix .c, $(SRC_FILES)))
+OBJ		= $(addprefix $(OBJ_DIR)/ft/, $(addsuffix .o, $(SRC_FILES)))
+DEP		= $(addprefix $(OBJ_DIR)/ft/, $(addsuffix .d, $(SRC_FILES)))
 
 #############
 ## RECIPES ##
@@ -92,35 +86,28 @@ BONUS_OBJ	= $(addprefix $(OBJ_DIR), $(addsuffix .o, $(BONUS_FILES)))
 
 all: $(NAME)
 
-$(NAME): $(OBJF) $(OBJ)
-	@$(AR) $(NAME) $(OBJ)
+-include $(DEP)
+
+$(NAME): $(TARGET)
+
+$(TARGET): $(OBJ)
+	@$(AR) $(TARGET) $(OBJ)
 	@echo "$(GREEN)$(NAME) compiled!$(DEF_COLOR)"
 
-$(OBJ_DIR)%.o: $(SRC_DIR)%.c | $(OBJF)
+$(OBJ_DIR)/ft/%.o: $(SRC_DIR)%.c
+	@mkdir -p $(shell dirname $@)
 	@echo "$(YELLOW)Compiling $<$(DEF_COLOR)"
-	@$(CC) $(CFLAGS) -I $(INCLUDE) -c $< -o $@
-
-$(OBJF):
-	@mkdir -p $(OBJ_DIR)
-	@mkdir -p $(addprefix $(OBJ_DIR), $(dir $(SRC_FILES)))
-	@mkdir -p $(addprefix $(OBJ_DIR), $(dir $(BONUS_FILES)))
-	@touch $(OBJF)
-	@echo "$(GREEN)Object directory created!$(DEF_COLOR)"
-
-bonus: all $(OBJ) $(BONUS_OBJ)
-	@$(AR) $(NAME) $(BONUS_OBJ)
-	@echo "$(GREEN)$(NAME) compiled with bonus!$(DEF_COLOR)"
+	@$(CC) $(CFLAGS) -I $(INCLUDE) -c $< -o $@ -MMD
 
 clean:
 	@echo "$(YELLOW)Cleaning object files for $(NAME)...$(DEF_COLOR)"
-	@$(RM) $(OBJ) $(BONUS_OBJ) $(OBJF)
 	@$(RM) -r $(OBJ_DIR)
 	@echo "$(GREEN)Objects for $(NAME) deleted succesfully!$(DEF_COLOR)"
 
 fclean: clean 
-	@$(RM) $(NAME)
+	@$(RM) $(TARGET)
 	@echo "$(GREEN)$(NAME) deleted succesfully!$(DEF_COLOR)"
 
 re: fclean all
-	
+
 .PHONY: all bonus clean fclean re
