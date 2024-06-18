@@ -13,16 +13,6 @@
 #include "libft.h"
 #include "pipex.h"
 
-/**
- * @brief Handles the exit of the program.
- *
- * This function is called when the program needs to exit. It takes an integer
- * parameter `error_code` which represents the exit code. If `error_code` is equal to 1,
- * it prints a usage message to the standard error file descriptor and then exits
- * the program with a status of 0.
- *
- * @param error_code The exit code.
- */
 void	exit_handler(int error_code)
 {
 	if (error_code == 1)
@@ -104,13 +94,13 @@ char	*get_env(char *envp[])
  * @param envp The array of environment variables.
  * @return The full path of the command if found, otherwise the original command.
  */
-char    *get_path(char *cmd, char *envp[])
+char	*get_path(char *cmd, char *envp[])
 {
-	int        i;
-	char    *exec;
-	char    **all_paths;
-	char    *part_path;
-	char    **cmds_array;
+	int		i;
+	char	*exec;
+	char	**all_paths;
+	char	*part_path;
+	char	**cmds_array;
 
 	if (ft_strchr(cmd, '/'))
 		return (cmd);

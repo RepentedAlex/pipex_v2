@@ -13,13 +13,21 @@
 #include "libft.h"
 #include "pipex.h"
 
-static bool    ft_check(char *cmd, char *envp[])
+static void	ft_free_get_path(char **cmds_array, char **all_paths)
 {
-	int        i;
-	char    *exec;
-	char    **all_paths;
-	char    *part_path;
-	char    **cmds_array;
+	if (cmds_array)
+		ft_free_tab(cmds_array);
+	if (all_paths)
+		ft_free_tab(all_paths);
+}
+
+static bool	ft_check(char *cmd, char *envp[])
+{
+	int		i;
+	char	*exec;
+	char	**all_paths;
+	char	*part_path;
+	char	**cmds_array;
 
 	if (ft_strchr(cmd, '/'))
 		if (access(cmd, F_OK) == 0)
@@ -32,19 +40,17 @@ static bool    ft_check(char *cmd, char *envp[])
 		part_path = ft_strjoin(all_paths[i], "/");
 		exec = ft_strjoin(part_path, cmds_array[0]);
 		free(part_path);
-		if (access(exec, F_OK| X_OK) == 0)
-			return (ft_free_tab(cmds_array), ft_free_tab(all_paths), free(exec), true);
+		if (access(exec, F_OK | X_OK) == 0)
+			return (ft_free_tab(cmds_array), ft_free_tab(all_paths), \
+			free(exec), true);
 		free(exec);
 		i++;
 	}
-	if (cmds_array)
-		ft_free_tab(cmds_array);
-	if (all_paths)
-		ft_free_tab(all_paths);
+	ft_free_get_path(cmds_array, all_paths);
 	return (false);
 }
 
-bool ft_check_commands(char *cmd1, char *cmd2, char *envp[])
+bool	ft_check_commands(char *cmd1, char *cmd2, char *envp[])
 {
 	bool	bool_cmd1;
 	bool	bool_cmd2;
