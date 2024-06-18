@@ -26,7 +26,9 @@
 void	child(char *argv[], int *p_fd, char *envp[]);
 void	execute(char *cmd, char *envp[]);
 void	exit_handler(int error_code);
+bool ft_check_commands(char *cmd1, char *cmd2, char *envp[]);
 void	ft_free_tab(char **tab);
+char	*get_env(char *envp[]);
 char	*get_path(char *cmd, char *envp[]);
 int		open_file(char *file, int io);
 void	parent(char *argv[], int *p_fd, char *envp[]);

@@ -104,6 +104,8 @@ int	main(int argc, char *argv[], char *envp[])
 
 	if (argc != 5)
 		exit_handler(1);
+	if (ft_check_commands(argv[2], argv[3], envp) == false)
+		exit_handler(3);
 	(ft_bzero(pid, sizeof(pid)), ft_bzero(pipe_fd, sizeof(pipe_fd)));
 	if (pipe(pipe_fd) == -1)
 		exit_handler(2);

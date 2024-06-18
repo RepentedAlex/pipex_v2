@@ -31,7 +31,8 @@ RM			=	rm -f
 #############
 
 SRC_FILES	=	main \
-				utils
+				utils \
+				utils2
 
 SRC			=	$(addprefix $(SRC_DIR)/, $(addsuffix .c, $(SRC_FILES)))
 OBJ			=	$(addprefix $(OBJ_DIR)/app/, $(addsuffix .o, $(SRC_FILES)))

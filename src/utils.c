@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 16:09:02 by apetitco          #+#    #+#             */
-/*   Updated: 2024/06/18 14:53:38 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/06/18 17:08:14 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,10 @@ void	exit_handler(int error_code)
 		ft_putstr_fd("./pipex infile cmd1 cmd2 outfile\n", STDERR_FILENO);
 	else if (error_code == 2)
 		ft_putstr_fd("Error: pipe creation failed\n", STDERR_FILENO);
+	else if (error_code == 3)
+		ft_putstr_fd("Error: command not found\n", STDERR_FILENO);
+	else if (error_code == 4)
+		ft_putstr_fd("Error: no environment\n", STDERR_FILENO);
 	exit(127);
 }
 
@@ -56,8 +60,8 @@ void	ft_free_tab(char **tab)
 	int	i;
 
 	i = 0;
-	while (tab[++i])
-		free(tab[i]);
+	while (tab[i])
+		free(tab[i++]);
 	free(tab);
 }
 
@@ -68,7 +72,7 @@ void	ft_free_tab(char **tab)
  * @param envp An array of strings representing the environment variables.
  * @return The value of the environment variable if found, NULL otherwise.
  */
-static char	*get_env(char *envp[])
+char	*get_env(char *envp[])
 {
 	int		i;
 	int		j;
@@ -100,13 +104,13 @@ static char	*get_env(char *envp[])
  * @param envp The array of environment variables.
  * @return The full path of the command if found, otherwise the original command.
  */
-char	*get_path(char *cmd, char *envp[])
+char    *get_path(char *cmd, char *envp[])
 {
-	int		i;
-	char	*exec;
-	char	**all_paths;
-	char	*part_path;
-	char	**cmds_array;
+	int        i;
+	char    *exec;
+	char    **all_paths;
+	char    *part_path;
+	char    **cmds_array;
 
 	if (ft_strchr(cmd, '/'))
 		return (cmd);
@@ -123,7 +127,7 @@ char	*get_path(char *cmd, char *envp[])
 		free(exec);
 		i++;
 	}
-	ft_free_tab(all_paths);
 	ft_free_tab(cmds_array);
-	return (cmd);
+	ft_free_tab(all_paths);
+	return (NULL);
 }
