@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 16:09:02 by apetitco          #+#    #+#             */
-/*   Updated: 2024/06/10 14:00:06 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/06/18 14:53:38 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,18 @@
  * @brief Handles the exit of the program.
  *
  * This function is called when the program needs to exit. It takes an integer
- * parameter `n_exit` which represents the exit code. If `n_exit` is equal to 1,
+ * parameter `error_code` which represents the exit code. If `error_code` is equal to 1,
  * it prints a usage message to the standard error file descriptor and then exits
  * the program with a status of 0.
  *
- * @param n_exit The exit code.
+ * @param error_code The exit code.
  */
-void	exit_handler(int n_exit)
+void	exit_handler(int error_code)
 {
-	if (n_exit == 1)
+	if (error_code == 1)
 		ft_putstr_fd("./pipex infile cmd1 cmd2 outfile\n", STDERR_FILENO);
+	else if (error_code == 2)
+		ft_putstr_fd("Error: pipe creation failed\n", STDERR_FILENO);
 	exit(127);
 }
 
@@ -51,14 +53,11 @@ int	open_file(char *file, int io)
  */
 void	ft_free_tab(char **tab)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
-	while (tab[i])
-	{
+	while (tab[++i])
 		free(tab[i]);
-		i++;
-	}
 	free(tab);
 }
 
@@ -69,7 +68,7 @@ void	ft_free_tab(char **tab)
  * @param envp An array of strings representing the environment variables.
  * @return The value of the environment variable if found, NULL otherwise.
  */
-static char	*get_env(char *name, char *envp[])
+static char	*get_env(char *envp[])
 {
 	int		i;
 	int		j;
@@ -82,7 +81,7 @@ static char	*get_env(char *name, char *envp[])
 		while (envp[i][j] && envp[i][j] != '=')
 			j++;
 		env_string = ft_substr(envp[i], 0, j);
-		if (ft_strncmp(env_string, name, j) == 0)
+		if (ft_strncmp(env_string, "PATH", j) == 0)
 		{
 			free(env_string);
 			return (envp[i] + j + 1);
@@ -112,7 +111,7 @@ char	*get_path(char *cmd, char *envp[])
 	if (ft_strchr(cmd, '/'))
 		return (cmd);
 	i = 0;
-	all_paths = ft_split(get_env("PATH", envp), ':');
+	all_paths = ft_split(get_env(envp), ':');
 	cmds_array = ft_split(cmd, ' ');
 	while (all_paths[i])
 	{

@@ -18,7 +18,7 @@ WHITE		=	\033[0;97m
 
 NAME		=	pipex
 CC			=	cc
-CLFAGS		=	-Wall -Wextra -Werror
+CLFAGS		=	-Wall -Wextra -Werror -g3
 INCLUDES	=   -I./$(INCLUDE) -I./$(LIBFT)$(INCLUDE) 
 SRC_DIR		=	src/
 INCLUDE		=	include/

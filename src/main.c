@@ -30,6 +30,7 @@ void	execute(char *cmd, char *envp[])
 	{
 		ft_putstr_fd("pipex: command not found: ", STDERR_FILENO);
 		ft_putendl_fd(cmds_array[0], STDERR_FILENO);
+		free(path);
 		ft_free_tab(cmds_array);
 		exit(127);
 	}
@@ -98,21 +99,21 @@ int	ft_fork(int *pid, int *pipes)
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	int		p_fd[2];
+	int		pipe_fd[2];
 	pid_t	pid[2];
 
 	if (argc != 5)
 		exit_handler(1);
-	(ft_bzero(pid, sizeof(pid)), ft_bzero(p_fd, sizeof(p_fd)));
-	if (pipe(p_fd) == -1)
-		(ft_putstr_fd("Error: pipe creation failed\n", 2), exit(127));
-	pid[0] = ft_fork(pid, p_fd);
+	(ft_bzero(pid, sizeof(pid)), ft_bzero(pipe_fd, sizeof(pipe_fd)));
+	if (pipe(pipe_fd) == -1)
+		exit_handler(2);
+	pid[0] = ft_fork(pid, pipe_fd);
 	if (pid[0] == 0)
-		child(argv, p_fd, envp);
-	pid[1] = ft_fork(pid, p_fd);
+		child(argv, pipe_fd, envp);
+	pid[1] = ft_fork(pid, pipe_fd);
 	if (pid[1] == 0)
-		parent(argv, p_fd, envp);
-	(close(p_fd[0]), close(p_fd[1]));
+		parent(argv, pipe_fd, envp);
+	(close(pipe_fd[0]), close(pipe_fd[1]));
 	(waitpid(pid[0], NULL, 0), waitpid(pid[1], NULL, 0));
 	return (0);
 }

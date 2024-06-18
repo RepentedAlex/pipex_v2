@@ -25,7 +25,7 @@
 
 void	child(char *argv[], int *p_fd, char *envp[]);
 void	execute(char *cmd, char *envp[]);
-void	exit_handler(int n_exit);
+void	exit_handler(int error_code);
 void	ft_free_tab(char **tab);
 char	*get_path(char *cmd, char *envp[]);
 int		open_file(char *file, int io);
