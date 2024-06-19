@@ -6,14 +6,14 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 16:09:02 by apetitco          #+#    #+#             */
-/*   Updated: 2024/06/18 17:08:14 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/06/19 15:37:12 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "pipex.h"
 
-void	exit_handler(int error_code)
+void	exit_handler(int error_code, int *files_fd)
 {
 	if (error_code == 1)
 		ft_putstr_fd("./pipex infile cmd1 cmd2 outfile\n", STDERR_FILENO);
@@ -23,6 +23,10 @@ void	exit_handler(int error_code)
 		ft_putstr_fd("Error: command not found\n", STDERR_FILENO);
 	else if (error_code == 4)
 		ft_putstr_fd("Error: no environment\n", STDERR_FILENO);
+	else if (error_code == 5)
+		ft_putstr_fd("Error: Failed to open files\n", STDERR_FILENO);
+	if (files_fd != NULL)
+		(close(files_fd[0]), close(files_fd[1]));
 	exit(127);
 }
 

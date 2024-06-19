@@ -18,7 +18,7 @@ WHITE		=	\033[0;97m
 
 NAME		=	pipex
 CC			=	cc
-CLFAGS		=	-Wall -Wextra -Werror -g3
+CLFAGS		=	-Wall -Wextra -Werror -g3 -MMD
 INCLUDES	=   -I./$(INCLUDE) -I./$(LIBFT)$(INCLUDE) 
 SRC_DIR		=	src/
 INCLUDE		=	include/
@@ -38,7 +38,6 @@ SRC			=	$(addprefix $(SRC_DIR)/, $(addsuffix .c, $(SRC_FILES)))
 OBJ			=	$(addprefix $(OBJ_DIR)/app/, $(addsuffix .o, $(SRC_FILES)))
 DEP			=	$(addprefix $(OBJ_DIR)/app/, $(addsuffix .d, $(SRC_FILES)))
 
--include $(DEP)
 
 #############
 ## RECIPES ##
@@ -47,7 +46,7 @@ DEP			=	$(addprefix $(OBJ_DIR)/app/, $(addsuffix .d, $(SRC_FILES)))
 all:	$(NAME)
 
 $(NAME): $(OBJ)
-	@make --no-print-directory -C $(LIBFT) "OBJ_DIR=$(shell realpath $(OBJ_DIR))"
+	@make --no-print-directory -C $(LIBFT) "OBJ_DIR=$(shell realpath $(OBJ_DIR))" libft.a
 	@echo "$(YELLOW)Linking $(NAME)...$(DEF_COLOR)"
 	@$(CC) $(CLFAGS) $(INCLUDES) -L./$(OBJ_DIR) $(OBJ) -lft -o $(NAME)
 
@@ -69,5 +68,7 @@ fclean:	clean
 	@echo "$(GREEN)$(NAME) deleted succesfully!$(DEF_COLOR)"
 
 re:	fclean all
+
+-include $(DEP)
 
 .PHONY:	all, clean, fclean, re

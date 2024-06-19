@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 16:17:16 by apetitco          #+#    #+#             */
-/*   Updated: 2024/06/10 14:24:57 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/06/19 15:59:39 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ void	execute(char *cmd, char *envp[])
  * @param p_fd The file descriptors for the pipe.
  * @param envp The environment variables passed to the program.
  */
-void	child(char *argv[], int *p_fd, char *envp[])
+void	child(char *argv[], int *p_fd, char *envp[], int *files_fd)
 {
-	int	fd;
-
-	fd = open_file(argv[1], 0);
-	dup2(fd, STDIN_FILENO);
+	dup2(files_fd[0], STDIN_FILENO);
 	dup2(p_fd[1], STDOUT_FILENO);
 	close(p_fd[0]);
+	close(p_fd[1]);
+	close(files_fd[1]);
+	close(files_fd[0]);
 	execute(argv[2], envp);
 }
 
@@ -61,14 +61,14 @@ void	child(char *argv[], int *p_fd, char *envp[])
  * @param p_fd The file descriptors for the pipe.
  * @param envp The environment variables.
  */
-void	parent(char *argv[], int *p_fd, char *envp[])
+void	parent(char *argv[], int *p_fd, char *envp[], int *files_fd)
 {
-	int	fd;
-
-	fd = open_file(argv[4], 1);
-	dup2(fd, STDOUT_FILENO);
 	dup2(p_fd[0], STDIN_FILENO);
+	dup2(files_fd[1], STDOUT_FILENO);
+	close(p_fd[0]);
 	close(p_fd[1]);
+	close(files_fd[1]);
+	close(files_fd[0]);
 	execute(argv[3], envp);
 }
 
@@ -99,23 +99,28 @@ int	ft_fork(int *pid, int *pipes)
 
 int	main(int argc, char *argv[], char *envp[])
 {
+	int		files_fd[2];
 	int		pipe_fd[2];
 	pid_t	pid[2];
 
 	if (argc != 5)
-		exit_handler(1);
-	if (ft_check_commands(argv[2], argv[3], envp) == false)
-		exit_handler(3);
+		exit_handler(1, NULL);
+	if (!open_files(argv[1], argv[4], files_fd))
+		exit_handler(5, NULL);
+	if (!ft_check_commands(argv[2], argv[3], envp))
+		exit_handler(3, files_fd);
 	(ft_bzero(pid, sizeof(pid)), ft_bzero(pipe_fd, sizeof(pipe_fd)));
 	if (pipe(pipe_fd) == -1)
-		exit_handler(2);
+		exit_handler(2, files_fd);
 	pid[0] = ft_fork(pid, pipe_fd);
 	if (pid[0] == 0)
-		child(argv, pipe_fd, envp);
+		child(argv, pipe_fd, envp, files_fd);
 	pid[1] = ft_fork(pid, pipe_fd);
 	if (pid[1] == 0)
-		parent(argv, pipe_fd, envp);
+		parent(argv, pipe_fd, envp, files_fd);
 	(close(pipe_fd[0]), close(pipe_fd[1]));
+	(close(files_fd[0]), close(files_fd[1]));
+	(close(STDIN_FILENO), close(STDOUT_FILENO), close(STDERR_FILENO));
 	(waitpid(pid[0], NULL, 0), waitpid(pid[1], NULL, 0));
 	return (0);
 }
