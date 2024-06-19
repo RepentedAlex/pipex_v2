@@ -25,7 +25,7 @@ static bool	ft_check(char *cmd, char *envp[])
 {
 	int		i;
 	char	*exec;
-	char	**all_paths;
+	char	**all_paths;,
 	char	*part_path;
 	char	**cmds_array;
 
