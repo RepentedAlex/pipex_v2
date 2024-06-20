@@ -57,7 +57,7 @@ bool	ft_check_commands(char *cmd1, char *cmd2, char *envp[])
 
 	bool_cmd1 = ft_check(cmd1, envp);
 	bool_cmd2 = ft_check(cmd2, envp);
-	if (bool_cmd1 == false || bool_cmd2 == false)
+	if (bool_cmd1 == false && bool_cmd2 == false)
 		return (false);
 	return (true);
 }

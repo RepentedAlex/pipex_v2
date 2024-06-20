@@ -6,7 +6,7 @@
 /*   By: apetitco <apetitco@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/11 16:17:16 by apetitco          #+#    #+#             */
-/*   Updated: 2024/06/19 15:59:39 by apetitco         ###   ########.fr       */
+/*   Updated: 2024/06/20 14:45:55 by apetitco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	execute(char *cmd, char *envp[])
 		ft_putendl_fd(cmds_array[0], STDERR_FILENO);
 		free(path);
 		ft_free_tab(cmds_array);
-		exit(127);
+		exit(128);
 	}
 }
 
